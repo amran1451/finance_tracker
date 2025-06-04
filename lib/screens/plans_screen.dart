@@ -33,10 +33,31 @@ class PlansScreen extends StatelessWidget {
                   .where((tx) => tx.amount < 0)
                   .fold<double>(0, (sum, tx) => sum + tx.amount.abs());
               final ratio = (spent / limit.amount).clamp(0.0, 1.0);
-              return ListTile(
-                title: Text(limit.categoryId),
-                subtitle: LinearProgressIndicator(value: ratio),
-                trailing: Text('${spent.toStringAsFixed(0)}/${limit.amount.toStringAsFixed(0)} ₽'),
+              return Dismissible(
+                key: ValueKey(limit.key),
+                background: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(left: 16),
+                  child: const Icon(Icons.delete, color: Colors.white),
+                ),
+                secondaryBackground: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 16),
+                  child: const Icon(Icons.delete, color: Colors.white),
+                ),
+                onDismissed: (_) {
+                  limit.delete();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Лимит удалён')),
+                  );
+                },
+                child: ListTile(
+                  title: Text(limit.categoryId),
+                  subtitle: LinearProgressIndicator(value: ratio),
+                  trailing: Text('${spent.toStringAsFixed(0)}/${limit.amount.toStringAsFixed(0)} ₽'),
+                ),
               );
             },
           );

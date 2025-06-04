@@ -22,21 +22,42 @@ class TransactionsListScreen extends StatelessWidget {
             itemCount: transactions.length,
             itemBuilder: (context, index) {
               final tx = transactions[index];
-              return ListTile(
-                leading: Text(
-                  '${tx.date.day.toString().padLeft(2, '0')}.${tx.date.month.toString().padLeft(2, '0')}.${tx.date.year}',
-                  style: const TextStyle(fontSize: 16),
+              return Dismissible(
+                key: ValueKey(tx.key),
+                background: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(left: 16),
+                  child: const Icon(Icons.delete, color: Colors.white),
                 ),
-                title: Text(
-                  tx.amount >= 0
-                    ? '+${tx.amount.toStringAsFixed(2)} ₽'
-                    : '${tx.amount.toStringAsFixed(2)} ₽',
-                  style: TextStyle(
-                    color: tx.amount >= 0 ? Colors.green : Colors.red,
-                    fontWeight: FontWeight.bold,
+                secondaryBackground: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 16),
+                  child: const Icon(Icons.delete, color: Colors.white),
+                ),
+                onDismissed: (_) {
+                  tx.delete();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Транзакция удалена')),
+                  );
+                },
+                child: ListTile(
+                  leading: Text(
+                    '${tx.date.day.toString().padLeft(2, '0')}.${tx.date.month.toString().padLeft(2, '0')}.${tx.date.year}',
+                    style: const TextStyle(fontSize: 16),
                   ),
+                  title: Text(
+                    tx.amount >= 0
+                        ? '+${tx.amount.toStringAsFixed(2)} ₽'
+                        : '${tx.amount.toStringAsFixed(2)} ₽',
+                    style: TextStyle(
+                      color: tx.amount >= 0 ? Colors.green : Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(tx.comment ?? tx.categoryId),
                 ),
-                subtitle: Text(tx.comment ?? tx.categoryId),
               );
             },
           );
