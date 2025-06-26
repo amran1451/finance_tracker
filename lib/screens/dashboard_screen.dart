@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:digital_diary_app/screens/home_menu_screen.dart';
 import '../models/transaction.dart';
 import '../theme_notifier.dart';
 
@@ -98,11 +99,9 @@ class DashboardScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            if (onBack != null) {
-              onBack!();
-            } else {
-              Navigator.maybePop(context);
-            }
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const HomeMenuScreen()),
+            );
           },
         ),
         title: const Text('Dashboard'),
