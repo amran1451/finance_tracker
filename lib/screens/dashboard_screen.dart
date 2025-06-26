@@ -25,7 +25,13 @@ const List<Color> fallbackColors = [
 
 class DashboardScreen extends StatelessWidget {
   final ThemeNotifier themeNotifier;
-  const DashboardScreen({Key? key, required this.themeNotifier}) : super(key: key);
+  final VoidCallback? onBack;
+
+  const DashboardScreen({
+    Key? key,
+    required this.themeNotifier,
+    this.onBack,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +98,11 @@ class DashboardScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            SystemNavigator.pop();
+            if (onBack != null) {
+              onBack!();
+            } else {
+              Navigator.maybePop(context);
+            }
           },
         ),
         title: const Text('Dashboard'),

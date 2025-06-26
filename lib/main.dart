@@ -79,12 +79,19 @@ class _RootScreenState extends State<RootScreen> {
 
   late final List<Widget> _screens;
 
+  void _showTransactions() => setState(() => _currentIndex = 0);
+  void _showDashboard() => setState(() => _currentIndex = 1);
+  void _handleBack() => _showTransactions();
+
   @override
   void initState() {
     super.initState();
     _screens = [
       const TransactionsListScreen(),
-      DashboardScreen(themeNotifier: widget.themeNotifier),
+      DashboardScreen(
+        themeNotifier: widget.themeNotifier,
+        onBack: _handleBack,
+      ),
     ];
   }
 
@@ -100,12 +107,12 @@ class _RootScreenState extends State<RootScreen> {
           children: [
             IconButton(
               icon: const Icon(Icons.list),
-              onPressed: () => setState(() => _currentIndex = 0),
+              onPressed: _showTransactions,
             ),
             const SizedBox(width: 48), // space for FAB
             IconButton(
               icon: const Icon(Icons.bar_chart),
-              onPressed: () => setState(() => _currentIndex = 1),
+              onPressed: _showTransactions,
             ),
           ],
         ),
