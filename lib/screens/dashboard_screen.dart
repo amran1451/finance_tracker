@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:digital_diary_app/screens/home_menu_screen.dart'; // Импорт экрана
+
 import '../models/transaction.dart';
 import '../theme_notifier.dart';
 
@@ -41,7 +43,7 @@ class DashboardScreen extends StatelessWidget {
 
     // Транзакции текущего месяца
     final monthTx = allTx.where((tx) =>
-        tx.date.year == now.year && tx.date.month == now.month).toList();
+    tx.date.year == now.year && tx.date.month == now.month).toList();
 
     // Суммарные доход и расход
     final income = monthTx
@@ -67,7 +69,7 @@ class DashboardScreen extends StatelessWidget {
           title: '${(e.value / (expense == 0 ? 1 : expense) * 100).toStringAsFixed(1)}%',
           radius: 50,
           titleStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          color: color, // здесь цвет
+          color: color,
         ),
       );
     }
@@ -88,7 +90,7 @@ class DashboardScreen extends StatelessWidget {
           title: '${(e.value / (income == 0 ? 1 : income) * 100).toStringAsFixed(1)}%',
           radius: 50,
           titleStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          color: color, // и здесь
+          color: color,
         ),
       );
     }
@@ -101,7 +103,12 @@ class DashboardScreen extends StatelessWidget {
             if (onBack != null) {
               onBack!();
             } else {
-              Navigator.of(context).pop();
+              // Навигация в экран HomeMenuScreen приложения "Digital Diary"
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => HomeMenuScreen(),
+                ),
+              );
             }
           },
         ),
