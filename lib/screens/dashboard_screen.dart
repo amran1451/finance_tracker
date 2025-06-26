@@ -89,6 +89,12 @@ class DashboardScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            SystemNavigator.pop();
+          },
+        ),
         title: const Text('Dashboard'),
         actions: [
           IconButton(
@@ -111,12 +117,6 @@ class DashboardScreen extends StatelessWidget {
               PopupMenuItem(value: 'plans', child: Text('Планы и лимиты')),
               PopupMenuItem(value: 'reports', child: Text('Отчёты')),
             ],
-          ),
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () {
-              SystemNavigator.pop();
-            },
           ),
         ],
       ),
