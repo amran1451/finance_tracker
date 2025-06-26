@@ -100,16 +100,12 @@ class DashboardScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            if (onBack != null) {
-              onBack!();
-            } else {
               // Навигация в экран HomeMenuScreen приложения "Digital Diary"
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => HomeMenuScreen(),
                 ),
               );
-            }
           },
         ),
         title: const Text('Dashboard'),
