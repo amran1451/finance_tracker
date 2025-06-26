@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../models/transaction.dart';
@@ -110,6 +111,12 @@ class DashboardScreen extends StatelessWidget {
               PopupMenuItem(value: 'plans', child: Text('Планы и лимиты')),
               PopupMenuItem(value: 'reports', child: Text('Отчёты')),
             ],
+          ),
+          IconButton(
+            icon: const Icon(Icons.exit_to_app),
+            onPressed: () {
+              SystemNavigator.pop();
+            },
           ),
         ],
       ),
