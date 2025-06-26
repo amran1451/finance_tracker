@@ -25,21 +25,37 @@ Future<void> main() async {
   runApp(MyApp(themeNotifier: themeNotifier));
 }
 
-class MyApp extends StatelessWidget {
-  final ThemeNotifier themeNotifier;
-  const MyApp({Key? key, required this.themeNotifier}) : super(key: key);
+class MyApp extends StatefulWidget {
+  final ThemeNotifier? themeNotifier;
+  const MyApp({Key? key, this.themeNotifier}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final ThemeNotifier _themeNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _themeNotifier = widget.themeNotifier ?? ThemeNotifier();
+    if (widget.themeNotifier == null) {
+      _themeNotifier.loadTheme();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ThemeMode>(
-      valueListenable: themeNotifier,
+      valueListenable: _themeNotifier,
       builder: (context, mode, _) {
         return MaterialApp(
           title: 'Finance Tracker',
           theme: ThemeData.light(),
           darkTheme: ThemeData.dark(),
           themeMode: mode,
-          home: RootScreen(themeNotifier: themeNotifier),
+          home: RootScreen(themeNotifier: _themeNotifier),
           routes: {
             '/plans': (_) => const PlansScreen(),
             '/reports': (_) => const ReportsScreen(),
