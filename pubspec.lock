@@ -17,13 +17,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.7.0"
-  app_theme:
-    dependency: "direct main"
-    description:
-      path: "../digital_diary_app/packages/app_theme"
-      relative: true
-    source: path
-    version: "0.0.1"
   archive:
     dependency: transitive
     description:
