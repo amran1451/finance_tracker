@@ -7,6 +7,7 @@ import 'screens/dashboard_screen.dart';
 import 'screens/plans_screen.dart';
 import 'screens/reports_screen.dart';
 import 'models/limit.dart';
+import 'theme_notifier.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,31 +17,42 @@ Future<void> main() async {
   Hive.registerAdapter(LimitAdapter());
 
   await Hive.openBox<FinTransaction>('transactions');
-  // Открываем limits _один раз_:
   await Hive.openBox<Limit>('limits');
 
-  runApp(const MyApp());
+  final themeNotifier = ThemeNotifier();
+  await themeNotifier.loadTheme();
+
+  runApp(MyApp(themeNotifier: themeNotifier));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final ThemeNotifier themeNotifier;
+  const MyApp({Key? key, required this.themeNotifier}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Finance Tracker',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const RootScreen(),
-      routes: {
-        '/plans': (_) => const PlansScreen(),
-        '/reports': (_) => const ReportsScreen(),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (context, mode, _) {
+        return MaterialApp(
+          title: 'Finance Tracker',
+          theme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
+          themeMode: mode,
+          home: RootScreen(themeNotifier: themeNotifier),
+          routes: {
+            '/plans': (_) => const PlansScreen(),
+            '/reports': (_) => const ReportsScreen(),
+          },
+        );
       },
     );
   }
 }
 
 class RootScreen extends StatefulWidget {
-  const RootScreen({Key? key}) : super(key: key);
+  final ThemeNotifier themeNotifier;
+  const RootScreen({Key? key, required this.themeNotifier}) : super(key: key);
 
   @override
   State<RootScreen> createState() => _RootScreenState();
@@ -49,10 +61,16 @@ class RootScreen extends StatefulWidget {
 class _RootScreenState extends State<RootScreen> {
   int _currentIndex = 1; // 0 = Transactions, 1 = Dashboard
 
-  final _screens = [
-    const TransactionsListScreen(),
-    const DashboardScreen(),
-  ];
+  late final List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      const TransactionsListScreen(),
+      DashboardScreen(themeNotifier: widget.themeNotifier),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {

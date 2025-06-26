@@ -19,6 +19,9 @@ dependencies:
   csv: ^5.0.0
   pdf: ^3.8.1
   printing: ^5.9.0
+  
+  app_theme:
+    path: ../digital_diary_app/packages/app_theme
 
 dev_dependencies:
   flutter_test:

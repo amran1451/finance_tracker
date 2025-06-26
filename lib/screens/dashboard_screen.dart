@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../models/transaction.dart';
+import '../theme_notifier.dart';
 
 // 1) Настройте цвета для ваших категорий здесь:
 const Map<String, Color> categoryColors = {
@@ -22,7 +23,8 @@ const List<Color> fallbackColors = [
 ];
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  final ThemeNotifier themeNotifier;
+  const DashboardScreen({Key? key, required this.themeNotifier}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +90,17 @@ class DashboardScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Dashboard'),
         actions: [
+          IconButton(
+            icon: Icon(themeNotifier.value == ThemeMode.dark
+                ? Icons.dark_mode
+                : Icons.light_mode),
+            onPressed: () {
+              final newMode = themeNotifier.value == ThemeMode.dark
+                  ? ThemeMode.light
+                  : ThemeMode.dark;
+              themeNotifier.updateTheme(newMode);
+            },
+          ),
           PopupMenuButton<String>(
             onSelected: (v) {
               if (v == 'plans') Navigator.pushNamed(context, '/plans');
