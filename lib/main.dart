@@ -8,6 +8,7 @@ import 'screens/plans_screen.dart';
 import 'screens/reports_screen.dart';
 import 'models/limit.dart';
 import 'theme_notifier.dart';
+import 'screens/expense_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
