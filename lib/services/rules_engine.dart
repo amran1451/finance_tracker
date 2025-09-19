@@ -33,7 +33,8 @@ class RulesEngine {
       case RuleConditionType.amountRange:
         final min = (condition.data?['min'] as num?)?.toDouble() ?? double.negativeInfinity;
         final max = (condition.data?['max'] as num?)?.toDouble() ?? double.infinity;
-        return transaction.amount >= min && transaction.amount <= max;
+        final amount = transaction.amount.abs();
+        return amount >= min && amount <= max;
       case RuleConditionType.textMatch:
         final query = (condition.data?['query'] as String?)?.toLowerCase();
         return query != null && (transaction.note ?? '').toLowerCase().contains(query);

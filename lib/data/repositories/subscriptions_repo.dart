@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../db/drift_database.dart';
@@ -29,7 +27,7 @@ class SubscriptionsRepository {
                 .firstWhere((e) => e.name == row.cadence, orElse: () => SubscriptionCadence.monthly),
             nextCharge: row.nextCharge,
             categoryId: row.categoryId,
-            tags: (jsonDecode(row.tags) as List).cast<String>(),
+            tags: row.tags,
             active: row.active,
             pause: row.pause,
           ),

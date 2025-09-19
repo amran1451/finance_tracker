@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../db/drift_database.dart';
@@ -29,7 +27,7 @@ class PlansRepository {
             title: row.title,
             expectedAmount: row.expectedAmount,
             categoryId: row.categoryId,
-            tags: (jsonDecode(row.tags) as List).cast<String>(),
+            tags: row.tags,
             deadline: row.deadline,
             periodId: row.periodId,
             priority: row.priority,

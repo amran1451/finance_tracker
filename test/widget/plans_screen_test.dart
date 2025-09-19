@@ -19,7 +19,7 @@ void main() {
     ];
 
     await tester.pumpWidget(ProviderScope(
-      overrides: [plansProvider.overrideWithValue(AsyncValue.data(plans))],
+      overrides: [plansProvider.overrideWith((ref) async => plans)],
       child: const MaterialApp(home: PlansScreen()),
     ));
 

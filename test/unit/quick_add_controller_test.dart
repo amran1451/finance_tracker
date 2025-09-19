@@ -4,8 +4,8 @@ import 'package:finance_tracker/features/quick_add/controller/quick_add_controll
 import 'package:finance_tracker/data/models/transaction.dart';
 import 'package:finance_tracker/data/repositories/transactions_repo.dart';
 
-class _FakeRepo extends TransactionsRepository {
-  _FakeRepo() : super(FakeAppDatabase());
+class _FakeRepo implements TransactionsRepositoryBase {
+  _FakeRepo();
 
   final List<FinanceTransaction> inserted = [];
 
@@ -17,8 +17,6 @@ class _FakeRepo extends TransactionsRepository {
   @override
   Future<List<FinanceTransaction>> fetchTransactions() async => inserted;
 }
-
-class FakeAppDatabase extends dynamic {}
 
 void main() {
   test('QuickAddNotifier builds amount correctly', () async {

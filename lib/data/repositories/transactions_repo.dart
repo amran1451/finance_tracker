@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:drift/drift.dart' show Value;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/error/failures.dart';
@@ -29,10 +28,6 @@ class TransactionsRepository implements TransactionsRepositoryBase {
   }
 
   FinanceTransaction _mapRow(TransactionsTableData row) {
-    final tagList = (jsonDecode(row.tags) as List).cast<String>();
-    final attachments = (jsonDecode(row.attachments) as List)
-        .map((e) => Attachment.fromJson(Map<String, dynamic>.from(e as Map)))
-        .toList();
     return FinanceTransaction(
       id: row.id,
       datetime: row.datetime,
@@ -42,10 +37,11 @@ class TransactionsRepository implements TransactionsRepositoryBase {
       type: TransactionType.values
           .firstWhere((e) => e.name == row.type, orElse: () => TransactionType.expense),
       categoryId: row.categoryId,
-      tags: tagList,
+      tags: row.tags,
       merchantId: row.merchantId,
       note: row.note,
-      attachments: attachments,
+      attachments:
+          row.attachments.map((e) => Attachment.fromJson(e)).toList(),
       planned: row.planned,
       planItemId: row.planItemId,
       excludeFromBudget: row.excludeFromBudget,
@@ -58,17 +54,18 @@ class TransactionsRepository implements TransactionsRepositoryBase {
       await db.into(db.transactionsTable).insertOnConflictUpdate(
             TransactionsTableCompanion.insert(
               id: transaction.id,
-              datetime: Value(transaction.datetime),
+              datetime: transaction.datetime,
               amount: transaction.amount,
               currency: transaction.currency,
               accountId: transaction.accountId,
               type: transaction.type.name,
               categoryId: Value(transaction.categoryId),
-              tags: Value(jsonEncode(transaction.tags)),
+              tags: List<String>.from(transaction.tags),
               merchantId: Value(transaction.merchantId),
               note: Value(transaction.note),
-              attachments:
-                  Value(jsonEncode(transaction.attachments.map((e) => e.toJson()).toList())),
+              attachments: transaction.attachments
+                  .map((e) => e.toJson())
+                  .toList(),
               planned: Value(transaction.planned),
               planItemId: Value(transaction.planItemId),
               excludeFromBudget: Value(transaction.excludeFromBudget),
