@@ -24,7 +24,8 @@ class GoalsScreen extends ConsumerWidget {
           itemCount: goals.length,
           itemBuilder: (context, index) {
             final goal = goals[index];
-            final progress = (goal.savedAmount / goal.targetAmount).clamp(0, 1);
+            final progress =
+                (goal.savedAmount / goal.targetAmount).clamp(0.0, 1.0);
             return Card(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               child: Padding(

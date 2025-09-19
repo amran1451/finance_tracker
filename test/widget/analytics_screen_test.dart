@@ -13,7 +13,7 @@ void main() {
     );
 
     await tester.pumpWidget(ProviderScope(
-      overrides: [analyticsOverviewProvider.overrideWithValue(AsyncValue.data(overview))],
+      overrides: [analyticsOverviewProvider.overrideWith((ref) async => overview)],
       child: const MaterialApp(home: AnalyticsScreen()),
     ));
 

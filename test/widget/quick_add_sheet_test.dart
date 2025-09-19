@@ -1,6 +1,5 @@
 import 'package:finance_tracker/data/models/transaction.dart';
 import 'package:finance_tracker/data/repositories/transactions_repo.dart';
-import 'package:finance_tracker/features/quick_add/controller/quick_add_controller.dart';
 import 'package:finance_tracker/features/quick_add/view/quick_add_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

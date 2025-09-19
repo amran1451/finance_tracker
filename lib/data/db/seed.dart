@@ -87,16 +87,16 @@ final _periods = [
   PaycheckPeriodsTableCompanion.insert(
     id: 'period_prev',
     title: 'Май 2024',
-    startDate: Value(DateTime(2024, 5, 1)),
-    endDate: Value(DateTime(2024, 5, 31)),
+    startDate: DateTime(2024, 5, 1),
+    endDate: DateTime(2024, 5, 31),
     kind: 'salary',
     closed: const Value(true),
   ),
   PaycheckPeriodsTableCompanion.insert(
     id: 'period_current',
     title: 'Июнь 2024',
-    startDate: Value(DateTime(2024, 6, 1)),
-    endDate: Value(DateTime(2024, 6, 30)),
+    startDate: DateTime(2024, 6, 1),
+    endDate: DateTime(2024, 6, 30),
     kind: 'salary',
   ),
 ];
@@ -107,10 +107,10 @@ final _plans = [
     title: 'Аренда',
     expectedAmount: 30000,
     periodId: 'period_current',
-    deadline: Value(DateTime(2024, 6, 5)),
+    deadline: DateTime(2024, 6, 5),
     flex: 'fixed',
     priority: const Value(2),
-    tags: const Value(<String>[]),
+    tags: const <String>[],
   ),
   PlanItemsTableCompanion.insert(
     id: 'phone',
@@ -118,10 +118,10 @@ final _plans = [
     expectedAmount: 900,
     categoryId: const Value('utilities'),
     periodId: 'period_current',
-    deadline: Value(DateTime(2024, 6, 10)),
+    deadline: DateTime(2024, 6, 10),
     flex: 'fixed',
     priority: const Value(1),
-    tags: const Value(<String>[]),
+    tags: const <String>[],
   ),
   PlanItemsTableCompanion.insert(
     id: 'groceries_week',
@@ -129,9 +129,9 @@ final _plans = [
     expectedAmount: 4500,
     categoryId: const Value('groceries'),
     periodId: 'period_current',
-    deadline: Value(DateTime(2024, 6, 7)),
+    deadline: DateTime(2024, 6, 7),
     flex: 'elastic',
-    tags: const Value(<String>[]),
+    tags: const <String>[],
   ),
   PlanItemsTableCompanion.insert(
     id: 'gift',
@@ -139,9 +139,9 @@ final _plans = [
     expectedAmount: 5000,
     categoryId: const Value('entertainment'),
     periodId: 'period_current',
-    deadline: Value(DateTime(2024, 6, 15)),
+    deadline: DateTime(2024, 6, 15),
     flex: 'elastic',
-    tags: const Value(<String>[]),
+    tags: const <String>[],
   ),
 ];
 
@@ -152,8 +152,9 @@ final _subscriptions = [
     amount: 169,
     currency: 'RUB',
     cadence: 'monthly',
-    nextCharge: Value(DateTime(2024, 6, 20)),
+    nextCharge: DateTime(2024, 6, 20),
     categoryId: const Value('subscriptions'),
+    tags: const <String>[],
   ),
   SubscriptionsTableCompanion.insert(
     id: 'youtube',
@@ -161,8 +162,9 @@ final _subscriptions = [
     amount: 199,
     currency: 'RUB',
     cadence: 'monthly',
-    nextCharge: Value(DateTime(2024, 6, 25)),
+    nextCharge: DateTime(2024, 6, 25),
     categoryId: const Value('subscriptions'),
+    tags: const <String>[],
   ),
 ];
 
@@ -172,7 +174,7 @@ final _goals = [
     title: 'Подушка',
     targetAmount: 30000,
     savedAmount: 7500,
-    dueDate: const Value(DateTime(2024, 12, 31)),
+    dueDate: Value(DateTime(2024, 12, 31)),
     autoTopUpRule: const Value('{"type":"roundup"}'),
   ),
 ];
@@ -184,14 +186,14 @@ List<TransactionsTableCompanion> get _transactions {
     final date = now.subtract(Duration(days: i * 2));
     items.add(TransactionsTableCompanion.insert(
       id: 'tx_$i',
-      datetime: Value(date),
+      datetime: date,
       amount: 300 + i * 15,
       currency: 'RUB',
       accountId: i.isEven ? 'cash' : 'card',
       type: 'expense',
       categoryId: const Value('groceries'),
-      tags: const Value(<String>[]),
-      attachments: const Value(<Map<String, dynamic>>[]),
+      tags: const <String>[],
+      attachments: const <Map<String, dynamic>>[],
     ));
   }
   return items;

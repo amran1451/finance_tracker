@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
@@ -41,7 +42,7 @@ class BackupService {
     throw BackupFailure('Restore is not implemented yet: $decrypted');
   }
 
-  Future<List<int>> _obtainKey() async {
+  Future<Uint8List> _obtainKey() async {
     const keyName = 'finvault_encryption_key';
     var key = await _secureStorage.read(key: keyName);
     if (key == null) {
@@ -49,23 +50,23 @@ class BackupService {
       final passphrase = DateTime.now().millisecondsSinceEpoch.toString();
       var hash = utf8.encode(passphrase + base64Encode(salt));
       for (var i = 0; i < 500; i++) {
-        hash = sha256.convert(hash).bytes;
+        hash = Uint8List.fromList(sha256.convert(hash).bytes);
       }
       key = base64Encode(hash);
       await _secureStorage.write(key: keyName, value: key);
     }
-    return base64Decode(key);
+    return Uint8List.fromList(base64Decode(key));
   }
 
-  List<int> _encryptPayload(String payload, List<int> keyBytes) {
+  Uint8List _encryptPayload(String payload, Uint8List keyBytes) {
     final iv = encrypt.IV.fromLength(16);
     final key = encrypt.Key(keyBytes.sublist(0, 32));
     final encrypter = encrypt.Encrypter(encrypt.AES(key));
     final encrypted = encrypter.encrypt(payload, iv: iv);
-    return encrypted.bytes;
+    return Uint8List.fromList(encrypted.bytes);
   }
 
-  String _decryptPayload(List<int> bytes, List<int> keyBytes) {
+  String _decryptPayload(Uint8List bytes, Uint8List keyBytes) {
     final iv = encrypt.IV.fromLength(16);
     final key = encrypt.Key(keyBytes.sublist(0, 32));
     final encrypter = encrypt.Encrypter(encrypt.AES(key));
