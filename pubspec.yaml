@@ -1,50 +1,55 @@
 name: finance_tracker
-description: "A new Flutter project."
-
-publish_to: 'none' 
+description: "Offline-first personal finance tracker"
+publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.7.2
+  sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  path_provider: ^2.0.11
-  uuid: ^4.0.0
+  flutter_localizations:
+    sdk: flutter
+  flutter_hooks: ^0.20.5
+  hooks_riverpod: ^2.5.1
+  go_router: ^14.1.4
+  drift: ^2.15.0
+  drift_flutter: ^0.2.0
+  path_provider: ^2.1.3
+  path: ^1.9.0
+  sqlite3_flutter_libs: ^0.5.24
+  intl: ^0.20.0
+  collection: ^1.18.0
+  logger: ^2.1.0
+  flutter_secure_storage: ^9.0.0
+  uuid: ^4.4.0
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.9.0
+  file_picker: ^8.1.2
+  share_plus: ^10.0.2
+  permission_handler: ^11.3.1
+  crypto: ^3.0.3
+  encrypt: ^5.0.1
+  flex_color_scheme: ^8.1.1
+
+  # Flutter SDK dependencies
   cupertino_icons: ^1.0.8
-  fl_chart: ^1.0.0
-  csv: ^5.0.0
-  pdf: ^3.8.1
-  printing: ^5.9.0
-  intl: ^0.20.2
-  provider: ^6.1.5
-
-  digital_diary_app:
-    path: ../digital_diary_app
-
-  nutrition_tracker:
-    path: ../nutrition_tracker
-
-  planner_app:
-    path: ../planner_app
-
-  workout_app:
-    path: ../workout_app
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  flutter_lints: ^5.0.0
-  hive_generator: ^1.1.3
-  build_runner: ^2.3.3
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.9
+  drift_dev: ^2.15.0
+  freezed: ^2.4.6
+  json_serializable: ^6.8.0
+  golden_toolkit: ^0.15.0
 
 flutter:
-
-  
   uses-material-design: true
+  assets:
+    - assets/icons/
+    - assets/images/
 
-  
+  generate: true
