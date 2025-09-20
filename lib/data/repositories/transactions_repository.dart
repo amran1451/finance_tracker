@@ -245,14 +245,14 @@ class TransactionsRepository {
     final query = _db.selectOnly(tx)
       ..addColumns([sumExpr])
       ..where(
-        (tbl) => tbl.datetime.isBetweenValues(period.startDate, period.endDate),
+        tx.datetime.isBetweenValues(period.startDate, period.endDate),
       )
-      ..where((tbl) => tbl.type.equals(type));
+      ..where(tx.type.equals(type));
     if (excludeFromBudget != null) {
-      query.where((tbl) => tbl.excludeFromBudget.equals(excludeFromBudget));
+      query.where(tx.excludeFromBudget.equals(excludeFromBudget));
     }
     if (planOnly) {
-      query.where((tbl) => tbl.planItemId.isNotNull());
+      query.where(tx.planItemId.isNotNull());
     }
     final result = await query.getSingleOrNull();
     final sum = result?.read(sumExpr) ?? 0;
@@ -265,10 +265,10 @@ class TransactionsRepository {
     final query = _db.selectOnly(tx)
       ..addColumns([sumExpr])
       ..where(
-        (tbl) => tbl.datetime.isBetweenValues(period.startDate, period.endDate),
+        tx.datetime.isBetweenValues(period.startDate, period.endDate),
       )
-      ..where((tbl) => tbl.type.equals('expense'))
-      ..where((tbl) => tbl.planItemId.isNull());
+      ..where(tx.type.equals('expense'))
+      ..where(tx.planItemId.isNull());
     final result = await query.getSingleOrNull();
     return result?.read(sumExpr) ?? 0;
   }
@@ -281,10 +281,10 @@ class TransactionsRepository {
     final query = _db.selectOnly(tx)
       ..addColumns([critColumn, sumExpr])
       ..where(
-        (tbl) => tbl.datetime.isBetweenValues(period.startDate, period.endDate),
+        tx.datetime.isBetweenValues(period.startDate, period.endDate),
       )
-      ..where((tbl) => tbl.type.equals('expense'))
-      ..where((tbl) => tbl.excludeFromBudget.equals(false))
+      ..where(tx.type.equals('expense'))
+      ..where(tx.excludeFromBudget.equals(false))
       ..groupBy([tx.criticalityId]);
     final rows = await query.get();
     final result = <String, int>{};
@@ -300,7 +300,7 @@ class TransactionsRepository {
   Future<List<String>> lastCriticalityIds(int limit) async {
     final tx = _db.transactionsTable;
     final query = _db.select(tx)
-      ..where((tbl) => tbl.criticalityId.isNotNull())
+      ..where(tx.criticalityId.isNotNull())
       ..orderBy([(tbl) => OrderingTerm(expression: tbl.datetime, mode: OrderingMode.desc)])
       ..limit(limit * 2);
     final rows = await query.get();
