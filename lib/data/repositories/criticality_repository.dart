@@ -42,17 +42,14 @@ class CriticalityRepository {
   }
 
   Future<void> delete(String id) async {
-    final countColumn = countAll().aliased('count');
-    final planRef = await (_db.selectOnly(_db.planItemsTable)
-          ..addColumns([countColumn])
-          ..where(_db.planItemsTable.criticalityId.equals(id)))
-        .getSingle();
-    final planCount = planRef.read(countColumn) ?? 0;
-    final txRef = await (_db.selectOnly(_db.transactionsTable)
-          ..addColumns([countColumn])
-          ..where(_db.transactionsTable.criticalityId.equals(id)))
-        .getSingle();
-    final txCount = txRef.read(countColumn) ?? 0;
+    final planCount = await (_db.select(_db.planItemsTable)
+          ..where((tbl) => tbl.criticalityId.equals(id)))
+        .get()
+        .then((rows) => rows.length);
+    final txCount = await (_db.select(_db.transactionsTable)
+          ..where((tbl) => tbl.criticalityId.equals(id)))
+        .get()
+        .then((rows) => rows.length);
     final totalRefs = planCount + txCount;
     if (totalRefs > 0) {
       throw Exception('Нельзя удалить: критичность используется. Архивируйте.');

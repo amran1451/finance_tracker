@@ -4,6 +4,7 @@ import '../../data/db/app_database.dart';
 import '../../data/repositories/accounts_repository.dart';
 import '../../data/repositories/categories_repository.dart';
 import '../../data/repositories/criticality_repository.dart';
+import '../../data/repositories/database_provider.dart';
 import '../../data/repositories/transactions_repository.dart';
 
 final expenseCategoriesProvider =

@@ -22,33 +22,33 @@ class TransactionsRepository {
     final query = _db.select(tx);
 
     if (filter.from != null) {
-      query.where(tx.datetime.isBiggerOrEqualValue(filter.from!));
+      query.where((tbl) => tbl.datetime.isBiggerOrEqualValue(filter.from!));
     }
     if (filter.to != null) {
-      query.where(tx.datetime.isSmallerOrEqualValue(filter.to!));
+      query.where((tbl) => tbl.datetime.isSmallerOrEqualValue(filter.to!));
     }
     if (filter.accountId != null) {
-      query.where(tx.accountId.equals(filter.accountId!));
+      query.where((tbl) => tbl.accountId.equals(filter.accountId!));
     }
     if (filter.categoryId != null) {
-      query.where(tx.categoryId.equals(filter.categoryId!));
+      query.where((tbl) => tbl.categoryId.equals(filter.categoryId!));
     }
     if (filter.planOnly != null) {
       if (filter.planOnly!) {
-        query.where(tx.planItemId.isNotNull());
+        query.where((tbl) => tbl.planItemId.isNotNull());
       } else {
-        query.where(tx.planItemId.isNull());
+        query.where((tbl) => tbl.planItemId.isNull());
       }
     }
     if (filter.type != null) {
-      query.where(tx.type.equals(filter.type!));
+      query.where((tbl) => tbl.type.equals(filter.type!));
     }
     if (filter.criticalityId != null) {
-      query.where(tx.criticalityId.equals(filter.criticalityId!));
+      query.where((tbl) => tbl.criticalityId.equals(filter.criticalityId!));
     }
     if (filter.excludeFromBudget != null) {
       query.where(
-        tx.excludeFromBudget.equals(filter.excludeFromBudget!),
+        (tbl) => tbl.excludeFromBudget.equals(filter.excludeFromBudget!),
       );
     }
 
@@ -103,7 +103,7 @@ class TransactionsRepository {
             planItemId: Value(planItemId),
             criticalityId: Value(criticalityId),
             note: Value(note),
-            attachments: Value(attachments),
+            attachments: attachments,
             excludeFromBudget: Value(excludeFromBudget),
           ),
         );
@@ -130,7 +130,7 @@ class TransactionsRepository {
             categoryId: Value(categoryId),
             criticalityId: Value(criticalityId),
             note: Value(note),
-            attachments: Value(attachments),
+            attachments: attachments,
           ),
         );
   }
@@ -155,7 +155,7 @@ class TransactionsRepository {
           accountId: fromAccountId,
           type: 'transfer',
           note: Value(note ?? marker),
-          attachments: const Value(<String>[]),
+          attachments: const <String>[],
         ),
       );
       batch.insert(
@@ -168,7 +168,7 @@ class TransactionsRepository {
           accountId: toAccountId,
           type: 'transfer',
           note: Value(note ?? marker),
-          attachments: const Value(<String>[]),
+          attachments: const <String>[],
         ),
       );
     });
@@ -187,8 +187,10 @@ class TransactionsRepository {
   Future<String> exportCsvForPeriod(PaycheckPeriodsTableData period) async {
     final tx = _db.transactionsTable;
     final query = _db.select(tx)
-      ..where(tx.datetime.isBetweenValues(period.startDate, period.endDate))
-      ..where(tx.excludeFromBudget.equals(false));
+      ..where(
+        (tbl) => tbl.datetime.isBetweenValues(period.startDate, period.endDate),
+      )
+      ..where((tbl) => tbl.excludeFromBudget.equals(false));
     query.orderBy([(tbl) => OrderingTerm(expression: tbl.datetime)]);
 
     final joined = query.join([
@@ -242,13 +244,15 @@ class TransactionsRepository {
     final sumExpr = tx.amount.sum();
     final query = _db.selectOnly(tx)
       ..addColumns([sumExpr])
-      ..where(tx.datetime.isBetweenValues(period.startDate, period.endDate))
-      ..where(tx.type.equals(type));
+      ..where(
+        (tbl) => tbl.datetime.isBetweenValues(period.startDate, period.endDate),
+      )
+      ..where((tbl) => tbl.type.equals(type));
     if (excludeFromBudget != null) {
-      query.where(tx.excludeFromBudget.equals(excludeFromBudget));
+      query.where((tbl) => tbl.excludeFromBudget.equals(excludeFromBudget));
     }
     if (planOnly) {
-      query.where(tx.planItemId.isNotNull());
+      query.where((tbl) => tbl.planItemId.isNotNull());
     }
     final result = await query.getSingleOrNull();
     final sum = result?.read(sumExpr) ?? 0;
@@ -260,9 +264,11 @@ class TransactionsRepository {
     final sumExpr = tx.amount.sum();
     final query = _db.selectOnly(tx)
       ..addColumns([sumExpr])
-      ..where(tx.datetime.isBetweenValues(period.startDate, period.endDate))
-      ..where(tx.type.equals('expense'))
-      ..where(tx.planItemId.isNull());
+      ..where(
+        (tbl) => tbl.datetime.isBetweenValues(period.startDate, period.endDate),
+      )
+      ..where((tbl) => tbl.type.equals('expense'))
+      ..where((tbl) => tbl.planItemId.isNull());
     final result = await query.getSingleOrNull();
     return result?.read(sumExpr) ?? 0;
   }
@@ -274,9 +280,11 @@ class TransactionsRepository {
     final sumExpr = tx.amount.sum();
     final query = _db.selectOnly(tx)
       ..addColumns([critColumn, sumExpr])
-      ..where(tx.datetime.isBetweenValues(period.startDate, period.endDate))
-      ..where(tx.type.equals('expense'))
-      ..where(tx.excludeFromBudget.equals(false))
+      ..where(
+        (tbl) => tbl.datetime.isBetweenValues(period.startDate, period.endDate),
+      )
+      ..where((tbl) => tbl.type.equals('expense'))
+      ..where((tbl) => tbl.excludeFromBudget.equals(false))
       ..groupBy([tx.criticalityId]);
     final rows = await query.get();
     final result = <String, int>{};
@@ -292,7 +300,7 @@ class TransactionsRepository {
   Future<List<String>> lastCriticalityIds(int limit) async {
     final tx = _db.transactionsTable;
     final query = _db.select(tx)
-      ..where(tx.criticalityId.isNotNull())
+      ..where((tbl) => tbl.criticalityId.isNotNull())
       ..orderBy([(tbl) => OrderingTerm(expression: tbl.datetime, mode: OrderingMode.desc)])
       ..limit(limit * 2);
     final rows = await query.get();

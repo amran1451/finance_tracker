@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/utils/money.dart';
+import '../../data/models/plan_models.dart';
 import '../plan/plan_screen.dart';
 import '../quick_entry/quick_entry_sheet.dart';
 import '../transactions/transactions_screen.dart';
