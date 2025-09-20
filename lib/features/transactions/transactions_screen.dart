@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -474,11 +475,11 @@ Future<void> _showTransactionDetails(
                 FilledButton(
                   onPressed: () async {
                     final updated = transaction.transaction.copyWith(
-                      note: noteController.text.trim().isEmpty
+                      note: Value(noteController.text.trim().isEmpty
                           ? null
-                          : noteController.text.trim(),
+                          : noteController.text.trim()),
                       excludeFromBudget: exclude.value,
-                      criticalityId: selectedCriticality.value,
+                      criticalityId: Value(selectedCriticality.value),
                     );
                     await txRepo.updateTransaction(updated);
                     if (context.mounted) {

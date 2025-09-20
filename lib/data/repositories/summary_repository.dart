@@ -56,8 +56,8 @@ class SummaryRepository {
               ..where((tbl) => tbl.id.equals(entry.key)))
             .getSingleOrNull();
         if (criticality != null) {
-          final share = totalCriticality == 0
-              ? 0
+          final double share = totalCriticality == 0
+              ? 0.0
               : entry.value / totalCriticality;
           criticalities.add(
             CriticalitySlice(

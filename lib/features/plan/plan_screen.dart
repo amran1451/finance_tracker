@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -319,15 +320,15 @@ class PlanItemForm extends HookConsumerWidget {
         await planRepo.updatePlanItem(initial!.copyWith(
           title: title,
           expectedAmount: amount.abs(),
-          categoryId: selectedCategory.value,
+          categoryId: Value(selectedCategory.value),
           periodId: period.id,
-          deadline: deadline.value,
+          deadline: Value(deadline.value),
           priority: priority.value,
           flex: flexValue.value,
-          note: noteController.text.trim().isEmpty
+          note: Value(noteController.text.trim().isEmpty
               ? null
-              : noteController.text.trim(),
-          criticalityId: selectedCriticality.value,
+              : noteController.text.trim()),
+          criticalityId: Value(selectedCriticality.value),
         ));
       }
       if (context.mounted) {

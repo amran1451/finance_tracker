@@ -43,7 +43,7 @@ class CategoriesTable extends Table {
 
   @override
   List<Index> get indexes => [
-        Index('idx_categories_kind_sort', [kind, sort]),
+        Index('idx_categories_kind_sort', columns: [kind, sort]),
       ];
 }
 
@@ -88,7 +88,7 @@ class PlanItemsTable extends Table {
   Set<Column> get primaryKey => {id};
 
   @override
-  List<Index> get indexes => [Index('idx_plan_period', [periodId])];
+  List<Index> get indexes => [Index('idx_plan_period', columns: [periodId])];
 }
 
 class CriticalityTable extends Table {
@@ -109,7 +109,7 @@ class CriticalityTable extends Table {
 
   @override
   List<Index> get indexes => [
-        Index('idx_criticality_sort', [sort, archived]),
+        Index('idx_criticality_sort', columns: [sort, archived]),
       ];
 }
 
@@ -142,10 +142,10 @@ class TransactionsTable extends Table {
 
   @override
   List<Index> get indexes => [
-        Index('idx_tx_datetime_account', [datetime, accountId]),
-        Index('idx_tx_category_datetime', [categoryId, datetime]),
-        Index('idx_tx_plan', [planItemId]),
-        Index('idx_tx_criticality', [criticalityId]),
+        Index('idx_tx_datetime_account', columns: [datetime, accountId]),
+        Index('idx_tx_category_datetime', columns: [categoryId, datetime]),
+        Index('idx_tx_plan', columns: [planItemId]),
+        Index('idx_tx_criticality', columns: [criticalityId]),
       ];
 }
 
