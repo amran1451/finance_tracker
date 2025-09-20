@@ -43,7 +43,10 @@ class CategoriesTable extends Table {
 
   @override
   List<Index> get indexes => [
-        Index('idx_categories_kind_sort', columns: [kind, sort]),
+        Index(
+          'idx_categories_kind_sort',
+          'CREATE INDEX IF NOT EXISTS idx_categories_kind_sort ON categories (kind, sort)',
+        ),
       ];
 }
 
@@ -88,7 +91,12 @@ class PlanItemsTable extends Table {
   Set<Column> get primaryKey => {id};
 
   @override
-  List<Index> get indexes => [Index('idx_plan_period', columns: [periodId])];
+  List<Index> get indexes => [
+        Index(
+          'idx_plan_period',
+          'CREATE INDEX IF NOT EXISTS idx_plan_period ON plan_items (period_id)',
+        ),
+      ];
 }
 
 class CriticalityTable extends Table {
@@ -109,7 +117,10 @@ class CriticalityTable extends Table {
 
   @override
   List<Index> get indexes => [
-        Index('idx_criticality_sort', columns: [sort, archived]),
+        Index(
+          'idx_criticality_sort',
+          'CREATE INDEX IF NOT EXISTS idx_criticality_sort ON criticality (sort, archived)',
+        ),
       ];
 }
 
@@ -142,10 +153,22 @@ class TransactionsTable extends Table {
 
   @override
   List<Index> get indexes => [
-        Index('idx_tx_datetime_account', columns: [datetime, accountId]),
-        Index('idx_tx_category_datetime', columns: [categoryId, datetime]),
-        Index('idx_tx_plan', columns: [planItemId]),
-        Index('idx_tx_criticality', columns: [criticalityId]),
+        Index(
+          'idx_tx_datetime_account',
+          'CREATE INDEX IF NOT EXISTS idx_tx_datetime_account ON transactions (datetime, account_id)',
+        ),
+        Index(
+          'idx_tx_category_datetime',
+          'CREATE INDEX IF NOT EXISTS idx_tx_category_datetime ON transactions (category_id, datetime)',
+        ),
+        Index(
+          'idx_tx_plan',
+          'CREATE INDEX IF NOT EXISTS idx_tx_plan ON transactions (plan_item_id)',
+        ),
+        Index(
+          'idx_tx_criticality',
+          'CREATE INDEX IF NOT EXISTS idx_tx_criticality ON transactions (criticality_id)',
+        ),
       ];
 }
 
