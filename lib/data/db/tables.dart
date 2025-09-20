@@ -6,11 +6,42 @@ class AccountsTable extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
   TextColumn get type => text()();
-  TextColumn get currency => text()();
-  RealColumn get openingBalance => real().withDefault(const Constant(0))();
-  BoolColumn get archived => boolean().withDefault(const Constant(false))();
+  TextColumn get currency =>
+      text().withDefault(const Constant('RUB'))();
+  IntColumn get openingBalance =>
+      integer().withDefault(const Constant(0))();
+  BoolColumn get archived =>
+      boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt =>
+      dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt =>
+      dateTime().withDefault(currentDateAndTime)();
+
   @override
   Set<Column> get primaryKey => {id};
+}
+
+class CategoriesTable extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  TextColumn get kind => text()();
+  TextColumn get emoji => text()();
+  TextColumn get parentId => text().nullable().references(this, #id)();
+  TextColumn get colorHex => text().nullable()();
+  BoolColumn get hidden => boolean().withDefault(const Constant(false))();
+  IntColumn get sort => integer().withDefault(const Constant(0))();
+  DateTimeColumn get createdAt =>
+      dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt =>
+      dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+        Index('idx_categories_kind_sort', [kind, sort]),
+      ];
 }
 
 class PaycheckPeriodsTable extends Table {
@@ -19,54 +50,13 @@ class PaycheckPeriodsTable extends Table {
   DateTimeColumn get startDate => dateTime()();
   DateTimeColumn get endDate => dateTime()();
   TextColumn get kind => text()();
-  BoolColumn get closed => boolean().withDefault(const Constant(false))();
-  @override
-  Set<Column> get primaryKey => {id};
-}
+  BoolColumn get closed =>
+      boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt =>
+      dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt =>
+      dateTime().withDefault(currentDateAndTime)();
 
-class CategoriesTable extends Table {
-  TextColumn get id => text()();
-  TextColumn get name => text()();
-  TextColumn get emoji => text()();
-  TextColumn get parentId => text().nullable().references(CategoriesTable, #id)();
-  TextColumn get colorHex => text()();
-  BoolColumn get hidden => boolean().withDefault(const Constant(false))();
-  @override
-  Set<Column> get primaryKey => {id};
-}
-
-class TagsTable extends Table {
-  TextColumn get id => text()();
-  TextColumn get name => text()();
-  TextColumn get colorHex => text().nullable()();
-  @override
-  Set<Column> get primaryKey => {id};
-}
-
-class MerchantsTable extends Table {
-  TextColumn get id => text()();
-  TextColumn get name => text()();
-  TextColumn get location => text().nullable()();
-  TextColumn get ruleHint => text().nullable()();
-  @override
-  Set<Column> get primaryKey => {id};
-}
-
-class TransactionsTable extends Table {
-  TextColumn get id => text()();
-  DateTimeColumn get datetime => dateTime()();
-  RealColumn get amount => real()();
-  TextColumn get currency => text()();
-  TextColumn get accountId => text().references(AccountsTable, #id)();
-  TextColumn get type => text()();
-  TextColumn get categoryId => text().nullable().references(CategoriesTable, #id)();
-  TextColumn get tags => text().map(const StringListConverter())();
-  TextColumn get merchantId => text().nullable().references(MerchantsTable, #id)();
-  TextColumn get note => text().nullable()();
-  TextColumn get attachments => text().map(const AttachmentListConverter())();
-  BoolColumn get planned => boolean().withDefault(const Constant(false))();
-  TextColumn get planItemId => text().nullable().references(PlanItemsTable, #id)();
-  BoolColumn get excludeFromBudget => boolean().withDefault(const Constant(false))();
   @override
   Set<Column> get primaryKey => {id};
 }
@@ -74,62 +64,86 @@ class TransactionsTable extends Table {
 class PlanItemsTable extends Table {
   TextColumn get id => text()();
   TextColumn get title => text()();
-  RealColumn get expectedAmount => real()();
-  TextColumn get categoryId => text().nullable().references(CategoriesTable, #id)();
-  TextColumn get tags => text().map(const StringListConverter())();
-  DateTimeColumn get deadline => dateTime()();
-  TextColumn get periodId => text().references(PaycheckPeriodsTable, #id)();
+  IntColumn get expectedAmount => integer()();
+  TextColumn get categoryId =>
+      text().nullable().references(CategoriesTable, #id)();
+  TextColumn get periodId =>
+      text().references(PaycheckPeriodsTable, #id)();
+  DateTimeColumn get deadline => dateTime().nullable()();
   IntColumn get priority => integer().withDefault(const Constant(0))();
-  TextColumn get flex => text()();
+  TextColumn get flex => text().withDefault(const Constant('fixed'))();
   BoolColumn get done => boolean().withDefault(const Constant(false))();
+  TextColumn get criticalityId =>
+      text().nullable().references(CriticalityTable, #id)();
+  TextColumn get note => text().nullable()();
+  DateTimeColumn get createdAt =>
+      dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt =>
+      dateTime().withDefault(currentDateAndTime)();
+
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [Index('idx_plan_period', [periodId])];
 }
 
-class BudgetsTable extends Table {
+class CriticalityTable extends Table {
   TextColumn get id => text()();
-  TextColumn get periodId => text().references(PaycheckPeriodsTable, #id)();
-  TextColumn get categoryId => text().references(CategoriesTable, #id)();
-  RealColumn get limitAmount => real()();
-  TextColumn get carryOverRule => text()();
-  RealColumn get carryOverPct => real().nullable()();
+  TextColumn get name => text()();
+  TextColumn get colorHex => text().nullable()();
+  TextColumn get iconEmoji => text().nullable()();
+  IntColumn get sort => integer().withDefault(const Constant(0))();
+  BoolColumn get archived =>
+      boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt =>
+      dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt =>
+      dateTime().withDefault(currentDateAndTime)();
+
   @override
   Set<Column> get primaryKey => {id};
-}
 
-class GoalsTable extends Table {
-  TextColumn get id => text()();
-  TextColumn get title => text()();
-  RealColumn get targetAmount => real()();
-  RealColumn get savedAmount => real()();
-  DateTimeColumn get dueDate => dateTime().nullable()();
-  TextColumn get autoTopUpRule => text().nullable()();
   @override
-  Set<Column> get primaryKey => {id};
+  List<Index> get indexes => [
+        Index('idx_criticality_sort', [sort, archived]),
+      ];
 }
 
-class SubscriptionsTable extends Table {
+class TransactionsTable extends Table {
   TextColumn get id => text()();
-  TextColumn get provider => text()();
-  RealColumn get amount => real()();
+  DateTimeColumn get datetime => dateTime()();
+  IntColumn get amount => integer()();
   TextColumn get currency => text()();
-  TextColumn get cadence => text()();
-  DateTimeColumn get nextCharge => dateTime()();
-  TextColumn get categoryId => text().nullable().references(CategoriesTable, #id)();
-  TextColumn get tags => text().map(const StringListConverter())();
-  BoolColumn get active => boolean().withDefault(const Constant(true))();
-  BoolColumn get pause => boolean().withDefault(const Constant(false))();
-  @override
-  Set<Column> get primaryKey => {id};
-}
+  TextColumn get accountId =>
+      text().references(AccountsTable, #id)();
+  TextColumn get type => text()();
+  TextColumn get categoryId =>
+      text().nullable().references(CategoriesTable, #id)();
+  TextColumn get planItemId =>
+      text().nullable().references(PlanItemsTable, #id)();
+  TextColumn get criticalityId =>
+      text().nullable().references(CriticalityTable, #id)();
+  TextColumn get note => text().nullable()();
+  TextColumn get attachments =>
+      text().map(const StringListConverter())();
+  BoolColumn get excludeFromBudget =>
+      boolean().withDefault(const Constant(false))();
+  DateTimeColumn get createdAt =>
+      dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt =>
+      dateTime().withDefault(currentDateAndTime)();
 
-class RulesTable extends Table {
-  TextColumn get id => text()();
-  TextColumn get condition => text()();
-  TextColumn get action => text()();
-  IntColumn get priority => integer().withDefault(const Constant(0))();
   @override
   Set<Column> get primaryKey => {id};
+
+  @override
+  List<Index> get indexes => [
+        Index('idx_tx_datetime_account', [datetime, accountId]),
+        Index('idx_tx_category_datetime', [categoryId, datetime]),
+        Index('idx_tx_plan', [planItemId]),
+        Index('idx_tx_criticality', [criticalityId]),
+      ];
 }
 
 class StringListConverter extends TypeConverter<List<String>, String> {
@@ -137,28 +151,13 @@ class StringListConverter extends TypeConverter<List<String>, String> {
 
   @override
   List<String> fromSql(String fromDb) {
-    if (fromDb.isEmpty) return const [];
-    return List<String>.from(const JsonDecoder().convert(fromDb) as List);
+    if (fromDb.isEmpty) {
+      return const [];
+    }
+    final decoded = jsonDecode(fromDb) as List<dynamic>;
+    return decoded.map((e) => e.toString()).toList();
   }
 
   @override
-  String toSql(List<String> value) => const JsonEncoder().convert(value);
-}
-
-class AttachmentListConverter
-    extends TypeConverter<List<Map<String, dynamic>>, String> {
-  const AttachmentListConverter();
-
-  @override
-  List<Map<String, dynamic>> fromSql(String fromDb) {
-    if (fromDb.isEmpty) return const [];
-    final raw = const JsonDecoder().convert(fromDb) as List;
-    return raw
-        .map((e) => Map<String, dynamic>.from(e as Map<String, dynamic>))
-        .toList();
-  }
-
-  @override
-  String toSql(List<Map<String, dynamic>> value) =>
-      const JsonEncoder().convert(value);
+  String toSql(List<String> value) => jsonEncode(value);
 }

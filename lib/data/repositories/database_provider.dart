@@ -1,7 +1,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../db/drift_database.dart';
+import '../db/app_database.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
-  return AppDatabase();
+  final db = AppDatabase();
+  ref.onDispose(db.close);
+  return db;
 });
