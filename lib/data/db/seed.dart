@@ -2,7 +2,6 @@ import 'package:drift/drift.dart';
 import 'package:intl/intl.dart';
 
 import 'app_database.dart';
-import 'tables.dart';
 
 Future<void> seedDatabase(AppDatabase db) async {
   final now = DateTime.now();
