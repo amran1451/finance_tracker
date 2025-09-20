@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart';
 
+part 'tables.g.dart';
+
 class AccountsTable extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
@@ -26,7 +28,8 @@ class CategoriesTable extends Table {
   TextColumn get name => text()();
   TextColumn get kind => text()();
   TextColumn get emoji => text()();
-  TextColumn get parentId => text().nullable().references(this, #id)();
+  TextColumn get parentId =>
+      text().nullable().references(CategoriesTable, #id)();
   TextColumn get colorHex => text().nullable()();
   BoolColumn get hidden => boolean().withDefault(const Constant(false))();
   IntColumn get sort => integer().withDefault(const Constant(0))();
